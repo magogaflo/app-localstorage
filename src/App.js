@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import { TaskCreator } from './componets/TaskCreator';
 import './App.css';
+import { TaskTable } from './componets/TaskTable';
+import { useState,useEffect } from 'react';
+
 
 function App() {
+    //es un arreglo vacio el useState
+    const [tasksItem, setTasksItem] = useState([])
+    function createNewTAsk(taskName){
+      //console.log(taskName);
+      if(!tasksItem.find(task=>task.name===taskName)){
+          setTasksItem([...tasksItem,{name:taskName,done:false}]) //esto guarda      
+      }//objeto     
+      }
+      useEffect(()=>{
+       let data=localStorage.getItem('tasks')
+       if(data){
+        setTasksItem( JSON.parse(data))
+       }
+      },[])
+      useEffect(()=>{
+        localStorage.setItem('tasks',JSON.stringify(tasksItem))
+      },[tasksItem])
+      
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="App" >
+      <TaskCreator createNewTAsk={createNewTAsk}/>
+      <TaskTable tasks={tasksItem}/>
+    </div >
   );
 }
 
